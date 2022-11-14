@@ -86,3 +86,103 @@ var finances = [
 ['Jan-2017', 138230],
 ['Feb-2017', 671099]
 ];
+
+
+// find total number of months in the data set
+
+console.log(`Total months: ${finances.length}`)
+
+
+//net total amount of profit and loss across entire period
+
+let totlProfit = 0
+
+for(let i = 0; i < finances.length; i++) {
+    let monthArray = finances[i];
+    for(let j = 0; j < monthArray.length; j++) {
+        if(typeof monthArray[j] !== 'string') {
+            totlProfit += monthArray[j];
+        }
+    }
+}
+
+console.log(`Total: $${totlProfit}`)
+
+
+//the average changes of profit and loss across the entire period (track what the total change in profits is from month to month and then find the average.) (Total/Number of months)
+
+let totalChanges = 0;
+
+let profitIncrease = [];
+
+let profitDecrease = [];
+
+for(let i = 0; i < finances.length; i++) {
+    for(let j = 0; j < finances[i].length; j++) {
+        if(typeof finances[i][j] !== 'string') {
+            let value1 = finances[i][j];            
+            if(finances[i + 1] !== undefined) {
+                for(let k = 0; k < finances[i + 1].length; k++) {
+                    if(typeof finances[i + 1][k] !== 'string') {
+                        let value2 = finances[i + 1][k];                        
+                        let profitChange =  value2 - value1;
+                        totalChanges += profitChange;                        
+                        if(profitChange > 0) {
+                            profitIncrease.push([finances[i + 1][0], profitChange])
+                        }
+                        if(profitChange < 0) {
+                            profitDecrease.push([finances[i + 1][0], profitChange])
+                        }
+                    }
+                }
+            }            
+            
+        }
+    }
+}
+
+
+
+let averageChanges = totalChanges / (finances.length - 1);
+
+let roundedAverageChanges = Math.round(averageChanges * 100) / 100
+
+console.log(`Average Changes: $${roundedAverageChanges}`)
+
+
+
+//The greatest increase in profits (date and amount) over the entire period
+
+let highestIncrease = ['', 0];
+
+for(let i = 0; i < profitIncrease.length; i++) {
+    for(let j = 0; j < profitIncrease[i].length; j++) {
+        if(typeof profitIncrease[i][j] !== 'string') {
+            if(profitIncrease[i][j] > highestIncrease[1]) {
+                highestIncrease = profitIncrease[i]
+            }
+        }        
+    }
+  
+}
+
+
+console.log(`Greatest increase in profits: ${highestIncrease[0]}($${highestIncrease[1]})`);
+
+//The greatest decrease in losses (date and amount) over the entire period.
+
+
+let highestDecrease = ['', 0]
+
+for(let i = 0; i < profitDecrease.length; i++) {
+    for(let j = 0; j < profitDecrease[i].length; j++) {
+        if(typeof profitDecrease[i][j] !== 'string') {
+            if(profitDecrease[i][j] < highestDecrease[1]) {
+                highestDecrease = profitDecrease[i]
+            }
+        }        
+    }
+  
+}
+
+console.log(`Greatest decrease in profits: ${highestDecrease[0]}($${highestDecrease[1]})`)
